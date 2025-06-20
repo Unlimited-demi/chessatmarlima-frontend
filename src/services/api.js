@@ -58,9 +58,9 @@ export const getVerifiedPlayers = async () => {
 }
 
 // Verify a player (admin only)
-export const verifyPlayerById = async (playerId, email) => {
+export const verifyPlayerById = async (email) => {
   try {
-    const payload = { playerId }
+    const payload = { email }
     if (email) payload.email = email           // include email
     const response = await api.post("/api/verifyPlayer", payload)
     return response.data

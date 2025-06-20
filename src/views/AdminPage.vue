@@ -136,7 +136,7 @@
                     <td class="player-name">{{ player.fullName }}</td>
                     <td class="player-department">{{ player.Department }}</td>
                     <td>
-                      <span :class="['level-badge', player.level.toLowerCase()]">
+                      <span :class="['level-badge', player.level]">
                         {{ player.level }}
                       </span>
                     </td>
@@ -183,7 +183,7 @@
                     <td class="player-name">{{ player.fullName }}</td>
                     <td class="player-department">{{ player.Department }}</td>
                     <td>
-                      <span :class="['level-badge', player.level.toLowerCase()]">
+                      <span :class="['level-badge', player.level]">
                         {{ player.level }}
                       </span>
                     </td>
@@ -243,7 +243,7 @@
             </div>
             <div class="info-row">
               <span class="info-label">Skill Level:</span>
-              <span :class="['level-badge', selectedPlayer.level.toLowerCase()]">
+              <span :class="['level-badge', selectedPlayer.level]">
                 {{ selectedPlayer.level }}
               </span>
             </div>
@@ -367,8 +367,10 @@ const loadData = async () => {
       getVerifiedPlayers()
     ])
     
-    registeredPlayers.value = registered
-    verifiedPlayers.value = verified
+    registeredPlayers.value = registered.data
+    verifiedPlayers.value = verified.data
+    console.log('Registered Players:', registeredPlayers.value) 
+    console.log('Verified Players:', verifiedPlayers.value) 
   } catch (error) {
     console.error('Error loading data:', error)
     toast.error('Failed to load data', {
@@ -384,6 +386,8 @@ const refreshData = () => {
 
 const viewPlayer = (player) => {
   selectedPlayer.value = player
+  console.log('Selected Player:', selectedPlayer.value)
+  const isPlayerVerified = selectedPlayer.verified
 }
 
 const closeModal = () => {
@@ -391,14 +395,16 @@ const closeModal = () => {
 }
 
 const isPlayerVerified = (player) => {
-  return verifiedPlayers.value.some(vp => vp.id === player.id)
+  // compare both possible identifiers to avoid matching undefined===undefined
+  return player.verified
 }
 
 const verifyPlayer = async (player) => {
   isProcessing.value = true
+
   
   try {
-    await verifyPlayerById(player.id)
+    await verifyPlayerById(player.email)
     toast.success(`${player.fullName} has been verified`)
     await loadData()
     closeModal()

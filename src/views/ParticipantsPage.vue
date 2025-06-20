@@ -158,7 +158,7 @@
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Skill Level</span>
-                  <span :class="['skill-badge', player.level.toLowerCase()]">
+                  <span :class="['skill-badge', player.level]">
                     <component :is="getSkillIcon(player.level)" class="skill-icon" />
                     {{ player.level }}
                   </span>
@@ -238,7 +238,7 @@ const skillDistribution = computed(() => {
   const distribution = { beginner: 0, intermediate: 0, advanced: 0 }
   const players = Array.isArray(verifiedPlayers.value) ? verifiedPlayers.value : []
   players.forEach(player => {
-    const level = player.level.toLowerCase()
+    const level = player.level
     if (distribution.hasOwnProperty(level)) {
       distribution[level]++
     }
@@ -255,17 +255,17 @@ const filteredPlayers = computed(() => {
   // Filter by skill level
   if (activeFilter.value !== 'all') {
     filtered = filtered.filter(player => 
-      player.level.toLowerCase() === activeFilter.value
+      player.level === activeFilter.value
     )
   }
 
   // Filter by search query
   if (searchQuery.value.trim()) {
-    const query = searchQuery.value.toLowerCase().trim()
+    const query = searchQuery.value().trim()
     filtered = filtered.filter(player =>
-      player.fullName.toLowerCase().includes(query) ||
-      player.Department.toLowerCase().includes(query) ||
-      player.lichessUsername.toLowerCase().includes(query)
+      player.fullName().includes(query) ||
+      player.Department().includes(query) ||
+      player.lichessUsername().includes(query)
     )
   }
 
