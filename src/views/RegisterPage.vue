@@ -25,7 +25,7 @@
           <p class="register-subtitle" v-motion 
              :initial="{ opacity: 0 }" 
              :enter="{ opacity: 1, transition: { delay: 400, duration: 500 } }">
-            Join the Marlima Chess Tournament 2024
+            Join the Marlima Chess Tournament 2025
           </p>
         </div>
 
@@ -100,20 +100,14 @@
             <div class="form-group">
               <label for="department" class="form-label">Department</label>
               <div class="input-wrapper">
-                <select
+                <input
                   id="department"
                   v-model="form.Department"
-                  class="form-select"
+                  type="text"
+                  class="form-input"
+                  placeholder="Department"
                   required
-                >
-                  <option value="">Select Department</option>
-                  <option value="Sports">Sports</option>
-                  <option value="Engineering">Engineering</option>
-                  <option value="Business">Business</option>
-                  <option value="Arts">Arts</option>
-                  <option value="Science">Science</option>
-                  <option value="Other">Other</option>
-                </select>
+                />
               </div>
             </div>
           </div>
@@ -516,3 +510,4 @@ const handleSubmit = async () => {
   }
 }
 </style>
+   

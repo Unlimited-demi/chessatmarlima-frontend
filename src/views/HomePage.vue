@@ -33,7 +33,7 @@
               :initial="{ opacity: 0, y: 50 }" 
               :enter="{ opacity: 1, y: 0, transition: { delay: 400, duration: 800 } }">
             <span class="title-line">Marlima Chess</span>
-            <span class="title-line">Tournament 2024</span>
+            <span class="title-line">Tournament 2025</span>
           </h1>
           
           <p class="hero-subtitle" v-motion 
@@ -150,7 +150,7 @@ const featuresSection = ref(null)
 const statNumbers = ref([])
 
 const tournamentDetails = [
-  { icon: Calendar, text: 'July 5th, 2024' },
+  { icon: Calendar, text: 'July 5th, 2025' },
   { icon: MapPin, text: 'Marlima Venue' },
   { icon: User, text: 'Hosted by Emmanuel Anokwuru' }
 ]

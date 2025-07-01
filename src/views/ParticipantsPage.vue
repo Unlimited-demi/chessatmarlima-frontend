@@ -37,7 +37,7 @@
             Tournament Participants
           </h1>
           <p class="page-subtitle">
-            Meet the verified players competing in the Marlima Chess Tournament 2024
+            Meet the verified players competing in the Marlima Chess Tournament 2025
           </p>
           
           <div class="stats-summary" v-motion 
@@ -158,7 +158,7 @@
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Skill Level</span>
-                  <span :class="['skill-badge', player.level]">
+                  <span :class="['skill-badge', player.level()]">
                     <component :is="getSkillIcon(player.level)" class="skill-icon" />
                     {{ player.level }}
                   </span>
@@ -238,7 +238,7 @@ const skillDistribution = computed(() => {
   const distribution = { beginner: 0, intermediate: 0, advanced: 0 }
   const players = Array.isArray(verifiedPlayers.value) ? verifiedPlayers.value : []
   players.forEach(player => {
-    const level = player.level
+    const level = player.level()
     if (distribution.hasOwnProperty(level)) {
       distribution[level]++
     }
@@ -255,7 +255,7 @@ const filteredPlayers = computed(() => {
   // Filter by skill level
   if (activeFilter.value !== 'all') {
     filtered = filtered.filter(player => 
-      player.level === activeFilter.value
+      player.level() === activeFilter.value
     )
   }
 
