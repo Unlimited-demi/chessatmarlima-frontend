@@ -112,7 +112,7 @@
     </section>
 
     <!-- Stats Section -->
-    <section class="stats-section">
+    <!-- <section class="stats-section">
       <div class="stats-container">
         <div class="stats-grid">
           <div v-for="(stat, index) in stats" :key="index" 
@@ -132,7 +132,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
   </div>
 </template>
 
@@ -152,7 +152,7 @@ const statNumbers = ref([])
 const tournamentDetails = [
   { icon: Calendar, text: 'July 5th, 2025' },
   { icon: MapPin, text: 'Marlima Venue' },
-  { icon: User, text: 'Hosted by Emmanuel Anokwuru' }
+  { icon: User, text: 'Hosted by Emmanuel Anokwuru(AirMa)' }
 ]
 
 const features = [

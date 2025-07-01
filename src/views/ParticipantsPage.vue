@@ -158,7 +158,7 @@
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Skill Level</span>
-                  <span :class="['skill-badge', player.level()]">
+                  <span :class="['skill-badge', player.level.toLowerCase()]">
                     <component :is="getSkillIcon(player.level)" class="skill-icon" />
                     {{ player.level }}
                   </span>
@@ -235,42 +235,34 @@ const filters = [
 
 // Computed properties
 const skillDistribution = computed(() => {
-  const distribution = { beginner: 0, intermediate: 0, advanced: 0 }
-  const players = Array.isArray(verifiedPlayers.value) ? verifiedPlayers.value : []
-  players.forEach(player => {
-    const level = player.level()
-    if (distribution.hasOwnProperty(level)) {
-      distribution[level]++
-    }
+  const dist = { beginner: 0, intermediate: 0, advanced: 0 }
+  verifiedPlayers.value.forEach(p => {
+    const lvl = p.level.toLowerCase()
+    if (dist.hasOwnProperty(lvl)) dist[lvl]++
   })
-  return distribution
+  return dist
 })
 
 const filteredPlayers = computed(() => {
-  const filteredSource = Array.isArray(verifiedPlayers.value)
-    ? verifiedPlayers.value
-    : []
-  let filtered = filteredSource
+  let list = Array.isArray(verifiedPlayers.value) ? verifiedPlayers.value : []
 
-  // Filter by skill level
+  // by skill
   if (activeFilter.value !== 'all') {
-    filtered = filtered.filter(player => 
-      player.level() === activeFilter.value
+    list = list.filter(p => p.level.toLowerCase() === activeFilter.value)
+  }
+
+  // by search
+  const q = searchQuery.value.trim().toLowerCase()
+  if (q) {
+    list = list.filter(p =>
+      p.fullName.toLowerCase().includes(q) ||
+      p.Department.toLowerCase().includes(q) ||
+      p.lichessUsername.toLowerCase().includes(q)
     )
   }
 
-  // Filter by search query
-  if (searchQuery.value.trim()) {
-    const query = searchQuery.value().trim()
-    filtered = filtered.filter(player =>
-      player.fullName().includes(query) ||
-      player.Department().includes(query) ||
-      player.lichessUsername().includes(query)
-    )
-  }
-
-  // Sort by rating (highest first)
-  return filtered.sort((a, b) => b.rating - a.rating)
+  // sort by rating desc
+  return list.sort((a, b) => b.rating - a.rating)
 })
 
 // Methods
@@ -278,9 +270,10 @@ const loadVerifiedPlayers = async () => {
   try {
     loading.value = true
     const { data } = await getVerifiedPlayers()
+    console.log('loaded:', data)       // debug
     verifiedPlayers.value = data
-  } catch (error) {
-    console.error('Error loading verified players:', error)
+  } catch (err) {
+    console.error('Error loading verified players:', err)
     toast.error('Failed to load participants', {
       description: 'Please try refreshing the page.'
     })
