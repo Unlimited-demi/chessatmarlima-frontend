@@ -2,7 +2,7 @@ import axios from "axios"
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000',
  
   headers: {
     "Content-Type": "application/json",
@@ -29,64 +29,51 @@ api.interceptors.response.use(
 
 // Participant registration
 export const registerParticipant = async (participantData) => {
-  try {
-    const response = await api.post("/api/register", participantData)
-    return response.data
-  } catch (error) {
-    throw error
-  }
+  const response = await api.post("/api/register", participantData)
+  return response.data
 }
 
 // Get registered players (admin only)
 export const getRegisteredPlayers = async () => {
-  try {
-    const response = await api.get("/api/getPlayers")
-    return response.data
-  } catch (error) {
-    throw error
-  }
+  const response = await api.get("/api/getPlayers")
+  return response.data
 }
 
 // Get verified players (admin only)
 export const getVerifiedPlayers = async () => {
-  try {
+ 
     const response = await api.get("/api/getVerifiedPlayers")
     return response.data
-  } catch (error) {
-    throw error
-  }
+  
+}
+
+// Get transaction status by reference
+export const getTransactionStatus = async (reference) => {
+  const response = await api.get(`/api/transactionStatus?reference=${encodeURIComponent(reference)}`)
+  return response.data
 }
 
 // Verify a player (admin only)
 export const verifyPlayerById = async (email) => {
-  try {
+
     const payload = { email }
     if (email) payload.email = email           // include email
     const response = await api.post("/api/verifyPlayer", payload)
     return response.data
-  } catch (error) {
-    throw error
   }
-}
 
 // Delete a player (admin only)
 export const deletePlayerById = async (playerEmail) => {
-  try {
+  
     const response = await api.delete(`/deletePlayer/`, { email: { playerEmail  } })
     return response.data
-  } catch (error) {
-    throw error
-  }
+ 
 }
 
 // Generate API key (admin only)
 export const generateApiKey = async () => {
-  try {
-    const response = await api.get("/admin/generate-apikey")
-    return response.data
-  } catch (error) {
-    throw error
-  }
+  const response = await api.get("/admin/generate-apikey")
+  return response.data
 }
 
 export default api

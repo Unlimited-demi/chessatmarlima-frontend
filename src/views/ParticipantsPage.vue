@@ -50,27 +50,6 @@
                 <div class="stat-label">Verified Players</div>
               </div>
             </div>
-            <div class="stat-item">
-              <Target class="stat-icon" />
-              <div class="stat-info">
-                <div class="stat-number">{{ skillDistribution.beginner }}</div>
-                <div class="stat-label">Beginners</div>
-              </div>
-            </div>
-            <div class="stat-item">
-              <Zap class="stat-icon" />
-              <div class="stat-info">
-                <div class="stat-number">{{ skillDistribution.intermediate }}</div>
-                <div class="stat-label">Intermediate</div>
-              </div>
-            </div>
-            <div class="stat-item">
-              <Award class="stat-icon" />
-              <div class="stat-info">
-                <div class="stat-number">{{ skillDistribution.advanced }}</div>
-                <div class="stat-label">Advanced</div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -157,13 +136,6 @@
                   <span class="detail-value rating">{{ player.rating }}</span>
                 </div>
                 <div class="detail-row">
-                  <span class="detail-label">Skill Level</span>
-                  <span :class="['skill-badge', player.level.toLowerCase()]">
-                    <component :is="getSkillIcon(player.level)" class="skill-icon" />
-                    {{ player.level }}
-                  </span>
-                </div>
-                <div class="detail-row">
                   <span class="detail-label">Lichess</span>
                   <a 
                     :href="`https://lichess.org/@/${player.lichessUsername}`"
@@ -228,27 +200,21 @@ const activeFilter = ref('all')
 // Filters
 const filters = [
   { value: 'all', label: 'All Players', icon: Users },
-  { value: 'beginner', label: 'Beginner', icon: Target },
-  { value: 'intermediate', label: 'Intermediate', icon: Zap },
-  { value: 'advanced', label: 'Advanced', icon: Award }
+  
 ]
 
 // Computed properties
-const skillDistribution = computed(() => {
-  const dist = { beginner: 0, intermediate: 0, advanced: 0 }
-  verifiedPlayers.value.forEach(p => {
-    const lvl = p.level.toLowerCase()
-    if (dist.hasOwnProperty(lvl)) dist[lvl]++
-  })
-  return dist
-})
+// Removed skillDistribution as skill levels are no longer shown
 
 const filteredPlayers = computed(() => {
   let list = Array.isArray(verifiedPlayers.value) ? verifiedPlayers.value : []
 
   // by skill
   if (activeFilter.value !== 'all') {
-    list = list.filter(p => p.level.toLowerCase() === activeFilter.value)
+    // Only filter for 'advanced' if selected
+    if (activeFilter.value === 'advanced') {
+      list = list.filter(p => p.level && p.level.toLowerCase() === 'advanced')
+    }
   }
 
   // by search
@@ -286,14 +252,7 @@ const setActiveFilter = (filter) => {
   activeFilter.value = filter
 }
 
-const getSkillIcon = (level) => {
-  const icons = {
-    'Beginner': Target,
-    'Intermediate': Zap,
-    'Advanced': Award
-  }
-  return icons[level] || Target
-}
+// Removed getSkillIcon as skill level is not shown
 
 const goToRegister = () => {
   router.push('/register')

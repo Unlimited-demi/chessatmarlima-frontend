@@ -25,6 +25,11 @@ const routes = [
     name: "Admin",
     component: AdminPage,
   },
+  {
+    path: "/payment/callback",
+    name: "PaymentCallback",
+    component: () => import("../views/PaymentCallback.vue"),
+  },
 ]
 
 const router = createRouter({

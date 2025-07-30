@@ -27,6 +27,11 @@
              :enter="{ opacity: 1, transition: { delay: 400, duration: 500 } }">
             Join the Marlima Chess Tournament 2025
           </p>
+          <div class="payment-note" v-motion 
+             :initial="{ opacity: 0 }" 
+             :enter="{ opacity: 1, transition: { delay: 600, duration: 500 } }">
+            <strong>Note:</strong> After registration, you will be redirected to complete your payment. Your registration is only confirmed after payment is successful.
+          </div>
         </div>
 
         <form @submit.prevent="handleSubmit" class="register-form">
@@ -78,65 +83,35 @@
             </div>
           </div>
 
-          <div class="form-row" v-motion 
-               :initial="{ opacity: 0, y: 20 }" 
-               :enter="{ opacity: 1, y: 0, transition: { delay: 800, duration: 400 } }">
-            <div class="form-group">
-              <label for="rating" class="form-label">Chess Rating</label>
-              <div class="input-wrapper">
-                <input
-                  id="rating"
-                  v-model.number="form.rating"
-                  type="number"
-                  class="form-input"
-                  placeholder="1200"
-                  min="800"
-                  max="3000"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="department" class="form-label">Department</label>
-              <div class="input-wrapper">
-                <input
-                  id="department"
-                  v-model="form.Department"
-                  type="text"
-                  class="form-input"
-                  placeholder="Department"
-                  required
-                />
-              </div>
+          <div class="form-group" v-motion 
+               :initial="{ opacity: 0, x: 20 }" 
+               :enter="{ opacity: 1, x: 0, transition: { delay: 800, duration: 400 } }">
+            <label for="department" class="form-label">Department</label>
+            <div class="input-wrapper">
+              <input
+                id="department"
+                v-model="form.Department"
+                type="text"
+                class="form-input"
+                placeholder="Department"
+                required
+              />
             </div>
           </div>
 
           <div class="form-group" v-motion 
                :initial="{ opacity: 0, scale: 0.9 }" 
                :enter="{ opacity: 1, scale: 1, transition: { delay: 900, duration: 500 } }">
-            <label for="level" class="form-label">Skill Level</label>
-            <div class="level-options">
-              <label
-                v-for="level in skillLevels"
-                :key="level.value"
-                :class="['level-option', { active: form.level === level.value }]"
-                v-motion :hover="{ scale: 1.01, y: -1 }"
-              >
-                <input
-                  v-model="form.level"
-                  type="radio"
-                  :value="level.value"
-                  class="level-radio"
-                />
-                <div class="level-content">
-                  <component :is="level.icon" class="level-icon" />
-                  <div class="level-text">
-                    <span class="level-name">{{ level.label }}</span>
-                    <span class="level-description">{{ level.description }}</span>
-                  </div>
-                </div>
-              </label>
+            <label for="phoneNumber" class="form-label">Phone Number</label>
+            <div class="input-wrapper">
+              <input
+                id="phoneNumber"
+                v-model="form.phoneNumber"
+                type="tel"
+                class="form-input"
+                placeholder="e.g. 08012345678"
+                required
+              />
             </div>
           </div>
 
@@ -179,33 +154,12 @@ const form = reactive({
   fullName: '',
   email: '',
   lichessUsername: '',
-  rating: null,
   Department: '',
-  level: ''
+  phoneNumber: ''
 })
 
 const isSubmitting = ref(false)
 
-const skillLevels = [
-  {
-    value: 'Beginner',
-    label: 'Beginner',
-    icon: Target,
-    description: 'New to competitive chess'
-  },
-  {
-    value: 'Intermediate',
-    label: 'Intermediate',
-    icon: Zap,
-    description: 'Some tournament experience'
-  },
-  {
-    value: 'Advanced',
-    label: 'Advanced',
-    icon: Trophy,
-    description: 'Experienced competitor'
-  }
-]
 
 const handleSubmit = async () => {
   if (isSubmitting.value) return
@@ -213,22 +167,28 @@ const handleSubmit = async () => {
   isSubmitting.value = true
 
   try {
-    await registerParticipant(form)
-    toast.success('Registration successful!', {
-      description: 'You have been registered for the tournament. Check your email for confirmation.',
-      duration: 5000
-    })
-    
+    const result = await registerParticipant(form)
+    if (result && result.paymentUrl) {
+      toast.success('Registration successful!', {
+        description: 'Proceed to payment to complete your registration.',
+        duration: 5000
+      })
+      // Redirect to payment page immediately
+      window.location.href = result.paymentUrl
+    } else {
+      toast.success('Registration successful!', {
+        description: 'You have been registered for the tournament. Check your email for confirmation.',
+        duration: 5000
+      })
+      // Optionally redirect to home
+      setTimeout(() => {
+        router.push('/')
+      }, 2000)
+    }
     // Reset form
     Object.keys(form).forEach(key => {
-      form[key] = key === 'rating' ? null : ''
+      form[key] = ''
     })
-    
-    // Redirect to home after a delay
-    setTimeout(() => {
-      router.push('/')
-    }, 2000)
-    
   } catch (error) {
     console.error('Registration error:', error)
     toast.error('Registration failed', {
@@ -242,6 +202,16 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
+  .payment-note {
+    background: rgba(255,255,255,0.08);
+    color: #ffd700;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin: 18px 0 0 0;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+  }
 .register-page {
   min-height: 100vh;
   position: relative;
