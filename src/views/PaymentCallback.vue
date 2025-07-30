@@ -66,7 +66,7 @@
               </div>
               <div class="detail-item">
                 <Calendar class="detail-icon" />
-                <span>Tournament date: July 5th, 2024</span>
+                <span>Tournament date: August 2nd, 2025</span>
               </div>
             </div>
           </div>
@@ -166,13 +166,16 @@ const goToParticipants = () => {
 onMounted(async () => {
   // Get reference from query params
   const reference = route.query.reference
-  
+
   if (!reference) {
     loading.value = false
     success.value = false
     toast.error('No payment reference found')
     return
   }
+
+  // Add delay before verifying payment
+  await new Promise(resolve => setTimeout(resolve, 5000)) // 5 seconds
 
   try {
     const result = await getTransactionStatus(reference)

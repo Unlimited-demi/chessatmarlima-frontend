@@ -150,7 +150,7 @@ const featuresSection = ref(null)
 const statNumbers = ref([])
 
 const tournamentDetails = [
-  { icon: Calendar, text: 'July 5th, 2025' },
+  { icon: Calendar, text: 'August 2nd, 2025' },
   { icon: MapPin, text: 'Marlima Venue' },
   { icon: User, text: 'Hosted by Emmanuel Anokwuru(AirMa)' }
 ]
