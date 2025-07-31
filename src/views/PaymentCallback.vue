@@ -175,7 +175,7 @@ onMounted(async () => {
   }
 
   // Add delay before verifying payment
-  await new Promise(resolve => setTimeout(resolve, 10000)) // 5 seconds
+  await new Promise(resolve => setTimeout(resolve, 20000)) // 5 seconds
 
   try {
     const result = await getTransactionStatus(reference)
